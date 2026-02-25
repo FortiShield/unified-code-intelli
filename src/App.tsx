@@ -6,6 +6,7 @@ import { PRReviewAgent } from '@/components/PRReviewAgent'
 import { SecurityAnalysisAgent } from '@/components/SecurityAnalysisAgent'
 import { CoverageOptimizerAgent } from '@/components/CoverageOptimizerAgent'
 import { RepositoryHealthMonitor } from '@/components/RepositoryHealthMonitor'
+import { CommitMessageGenerator } from '@/components/CommitMessageGenerator'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -31,6 +32,13 @@ const agents: Agent[] = [
     description: 'Test generation',
     status: 'active',
     icon: 'TestTube'
+  },
+  {
+    id: 'commit',
+    name: 'Commits',
+    description: 'Message generation',
+    status: 'active',
+    icon: 'GitCommit'
   },
   {
     id: 'health',
@@ -71,7 +79,7 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-5 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-6 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
@@ -83,6 +91,9 @@ function App() {
                 </TabsTrigger>
                 <TabsTrigger value="coverage" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Coverage
+                </TabsTrigger>
+                <TabsTrigger value="commit" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Commits
                 </TabsTrigger>
                 <TabsTrigger value="health" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Health
@@ -103,7 +114,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                   {agents.map((agent) => (
                     <Card
                       key={agent.id}
@@ -169,6 +180,10 @@ function App() {
 
               <TabsContent value="coverage">
                 <CoverageOptimizerAgent />
+              </TabsContent>
+
+              <TabsContent value="commit">
+                <CommitMessageGenerator />
               </TabsContent>
 
               <TabsContent value="health">
