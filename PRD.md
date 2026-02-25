@@ -68,6 +68,13 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Progression**: Aggregate all metrics → Analyze module stability and churn → Review feature request backlog → LLM synthesizes insights → Generate prioritized recommendations with rationale → Display risk assessment for each recommendation
 - **Success criteria**: Provides actionable strategic insights, explains reasoning, prioritizes recommendations by impact
 
+### GitHub Organization Health Dashboard
+- **Functionality**: Comprehensive organization-level analysis including GitHub policy compliance, branch protection rules, resource limits (memory, cache, actions), repository security posture, DevSecOps maturity assessment, and high-potential repository identification with an overall org health percentage score
+- **Purpose**: Provides C-level and engineering leadership with enterprise-wide visibility into security posture, policy compliance, resource utilization, and identifies repositories requiring attention or having high growth potential
+- **Trigger**: User connects GitHub organization → selects "Org Health" view
+- **Progression**: Authenticate with GitHub → Select organization → Fetch all repositories and org settings → Analyze branch protection policies → Check security settings (2FA enforcement, SSO, dependency scanning) → Assess resource limits (Actions minutes, package storage, cache usage) → Evaluate DevSecOps maturity (CI/CD coverage, automated testing, security scanning) → Score each repository → Identify high-potential repos based on activity, stars, contributors → Calculate weighted org health percentage → Display comprehensive dashboard with drill-down capabilities
+- **Success criteria**: Successfully fetches org-wide data, accurately calculates health metrics, identifies policy violations, highlights high-potential repositories, provides actionable remediation steps with DevSecOps best practice recommendations
+
 ## Edge Case Handling
 
 - **Empty Repository**: Display onboarding flow explaining how to connect repository and upload initial coverage reports

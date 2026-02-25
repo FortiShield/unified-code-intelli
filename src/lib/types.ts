@@ -104,3 +104,118 @@ export interface CommitMessage {
   subject: string
   body?: string
 }
+
+export interface BranchProtectionRule {
+  pattern: string
+  requiresPullRequest: boolean
+  requiredApprovingReviewCount: number
+  dismissesStaleReviews: boolean
+  requiresCodeOwnerReviews: boolean
+  requiresStatusChecks: boolean
+  requiredStatusChecks: string[]
+  requiresLinearHistory: boolean
+  allowsForcePushes: boolean
+  allowsDeletions: boolean
+  score: number
+}
+
+export interface SecurityPolicy {
+  twoFactorRequired: boolean
+  ssoEnabled: boolean
+  dependabotEnabled: boolean
+  secretScanningEnabled: boolean
+  codeScanningEnabled: boolean
+  vulnerabilityAlertsEnabled: boolean
+  score: number
+}
+
+export interface ResourceLimits {
+  actionsMinutesUsed: number
+  actionsMinutesLimit: number
+  packageStorageUsed: number
+  packageStorageLimit: number
+  cacheStorageUsed: number
+  cacheStorageLimit: number
+  utilizationPercentage: number
+}
+
+export interface DevSecOpsMaturity {
+  cicdCoverage: number
+  automatedTestingCoverage: number
+  securityScanningCoverage: number
+  codeReviewCoverage: number
+  documentationCoverage: number
+  overallScore: number
+  level: 'initial' | 'managed' | 'defined' | 'quantitatively-managed' | 'optimizing'
+}
+
+export interface RepositoryScore {
+  repoName: string
+  owner: string
+  visibility: 'public' | 'private' | 'internal'
+  branchProtectionScore: number
+  securityScore: number
+  activityScore: number
+  qualityScore: number
+  devSecOpsScore: number
+  overallScore: number
+  stars: number
+  forks: number
+  contributors: number
+  openIssues: number
+  openPRs: number
+  lastUpdated: Date
+  languages: Record<string, number>
+  hasCI: boolean
+  hasTests: boolean
+  hasSecurityPolicy: boolean
+  hasDependabot: boolean
+  vulnerabilities: {
+    critical: number
+    high: number
+    medium: number
+    low: number
+  }
+}
+
+export interface HighPotentialRepository {
+  repoName: string
+  owner: string
+  potentialScore: number
+  growthRate: number
+  contributorGrowth: number
+  communityEngagement: number
+  codeQuality: number
+  reasons: string[]
+  recommendations: string[]
+}
+
+export interface PolicyViolation {
+  repoName: string
+  policyType: 'branch-protection' | 'security' | 'compliance' | 'quality'
+  severity: SeverityLevel
+  description: string
+  remediation: string
+  impact: string
+}
+
+export interface OrganizationHealth {
+  organizationName: string
+  totalRepositories: number
+  analyzedRepositories: number
+  overallHealthScore: number
+  branchProtection: {
+    compliantRepos: number
+    totalRepos: number
+    score: number
+    violations: PolicyViolation[]
+  }
+  security: SecurityPolicy
+  resourceLimits: ResourceLimits
+  devSecOpsMaturity: DevSecOpsMaturity
+  repositoryScores: RepositoryScore[]
+  highPotentialRepos: HighPotentialRepository[]
+  policyViolations: PolicyViolation[]
+  recommendations: string[]
+  lastAnalyzed: Date
+}

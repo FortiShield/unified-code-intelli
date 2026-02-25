@@ -7,6 +7,7 @@ import { SecurityAnalysisAgent } from '@/components/SecurityAnalysisAgent'
 import { CoverageOptimizerAgent } from '@/components/CoverageOptimizerAgent'
 import { RepositoryHealthMonitor } from '@/components/RepositoryHealthMonitor'
 import { CommitMessageGenerator } from '@/components/CommitMessageGenerator'
+import { OrganizationHealthDashboard } from '@/components/OrganizationHealthDashboard'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -46,6 +47,13 @@ const agents: Agent[] = [
     description: 'Repository metrics',
     status: 'active',
     icon: 'Pulse'
+  },
+  {
+    id: 'org-health',
+    name: 'Org Health',
+    description: 'Organization analysis',
+    status: 'active',
+    icon: 'Building'
   }
 ]
 
@@ -79,7 +87,7 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-6 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-7 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
@@ -98,6 +106,9 @@ function App() {
                 <TabsTrigger value="health" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Health
                 </TabsTrigger>
+                <TabsTrigger value="org-health" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Org Health
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-6">
@@ -114,7 +125,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
                   {agents.map((agent) => (
                     <Card
                       key={agent.id}
@@ -188,6 +199,10 @@ function App() {
 
               <TabsContent value="health">
                 <RepositoryHealthMonitor />
+              </TabsContent>
+
+              <TabsContent value="org-health">
+                <OrganizationHealthDashboard />
               </TabsContent>
             </Tabs>
           </main>
