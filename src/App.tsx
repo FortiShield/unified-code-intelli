@@ -13,6 +13,7 @@ import { GitHubAppBuilder } from '@/components/GitHubAppBuilder'
 import { SandboxManager } from '@/components/SandboxManager'
 import { MarketplaceListing } from '@/components/MarketplaceListing'
 import { AIModelIntegration } from '@/components/AIModelIntegration'
+import { WorkflowAutomation } from '@/components/WorkflowAutomation'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -113,9 +114,12 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-12 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-13 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
+                </TabsTrigger>
+                <TabsTrigger value="workflows" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Workflows
                 </TabsTrigger>
                 <TabsTrigger value="pr-review" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   PR Review
@@ -220,6 +224,10 @@ function App() {
                     </div>
                   </div>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="workflows">
+                <WorkflowAutomation />
               </TabsContent>
 
               <TabsContent value="pr-review">
