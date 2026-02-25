@@ -9,6 +9,8 @@ import { RepositoryHealthMonitor } from '@/components/RepositoryHealthMonitor'
 import { CommitMessageGenerator } from '@/components/CommitMessageGenerator'
 import { OrganizationHealthDashboard } from '@/components/OrganizationHealthDashboard'
 import { PolicyEnforcementDashboard } from '@/components/PolicyEnforcementDashboard'
+import { GitHubAppBuilder } from '@/components/GitHubAppBuilder'
+import { SandboxManager } from '@/components/SandboxManager'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -62,6 +64,20 @@ const agents: Agent[] = [
     description: 'Automated enforcement',
     status: 'active',
     icon: 'ShieldCheck'
+  },
+  {
+    id: 'github-app',
+    name: 'GitHub App',
+    description: 'App builder & marketplace',
+    status: 'active',
+    icon: 'Package'
+  },
+  {
+    id: 'sandbox',
+    name: 'Sandbox',
+    description: 'Development environment',
+    status: 'active',
+    icon: 'Terminal'
   }
 ]
 
@@ -95,7 +111,7 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-8 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-10 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
@@ -119,6 +135,12 @@ function App() {
                 </TabsTrigger>
                 <TabsTrigger value="policy-enforcement" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Policy
+                </TabsTrigger>
+                <TabsTrigger value="github-app" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  GitHub App
+                </TabsTrigger>
+                <TabsTrigger value="sandbox" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Sandbox
                 </TabsTrigger>
               </TabsList>
 
@@ -218,6 +240,14 @@ function App() {
 
               <TabsContent value="policy-enforcement">
                 <PolicyEnforcementDashboard />
+              </TabsContent>
+
+              <TabsContent value="github-app">
+                <GitHubAppBuilder />
+              </TabsContent>
+
+              <TabsContent value="sandbox">
+                <SandboxManager />
               </TabsContent>
             </Tabs>
           </main>
