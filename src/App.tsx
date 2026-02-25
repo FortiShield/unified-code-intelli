@@ -116,9 +116,8 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-15 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Overview
+                <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 </TabsTrigger>
                 <TabsTrigger value="workflow-builder" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Builder
@@ -127,14 +126,13 @@ function App() {
                   Workflows
                 </TabsTrigger>
                 <TabsTrigger value="execution-history" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  History
                 </TabsTrigger>
+                <TabsTrigger value="pr-review" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  PR Review
                 <TabsTrigger value="pr-review" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   PR Review
                 </TabsTrigger>
                 <TabsTrigger value="security" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Security
-                </TabsTrigger>
                 <TabsTrigger value="coverage" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Coverage
                 </TabsTrigger>
