@@ -8,6 +8,7 @@ import { CoverageOptimizerAgent } from '@/components/CoverageOptimizerAgent'
 import { RepositoryHealthMonitor } from '@/components/RepositoryHealthMonitor'
 import { CommitMessageGenerator } from '@/components/CommitMessageGenerator'
 import { OrganizationHealthDashboard } from '@/components/OrganizationHealthDashboard'
+import { PolicyEnforcementDashboard } from '@/components/PolicyEnforcementDashboard'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -54,6 +55,13 @@ const agents: Agent[] = [
     description: 'Organization analysis',
     status: 'active',
     icon: 'Building'
+  },
+  {
+    id: 'policy-enforcement',
+    name: 'Policy',
+    description: 'Automated enforcement',
+    status: 'active',
+    icon: 'ShieldCheck'
   }
 ]
 
@@ -87,7 +95,7 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-7 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-8 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
@@ -108,6 +116,9 @@ function App() {
                 </TabsTrigger>
                 <TabsTrigger value="org-health" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Org Health
+                </TabsTrigger>
+                <TabsTrigger value="policy-enforcement" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Policy
                 </TabsTrigger>
               </TabsList>
 
@@ -203,6 +214,10 @@ function App() {
 
               <TabsContent value="org-health">
                 <OrganizationHealthDashboard />
+              </TabsContent>
+
+              <TabsContent value="policy-enforcement">
+                <PolicyEnforcementDashboard />
               </TabsContent>
             </Tabs>
           </main>

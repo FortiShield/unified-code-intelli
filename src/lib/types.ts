@@ -219,3 +219,106 @@ export interface OrganizationHealth {
   recommendations: string[]
   lastAnalyzed: Date
 }
+
+export type PolicyRuleType = 
+  | 'branch-protection'
+  | 'required-reviews'
+  | 'required-checks'
+  | 'commit-signing'
+  | 'merge-strategy'
+  | 'file-restrictions'
+  | 'security-scanning'
+  | 'vulnerability-alerts'
+  | 'code-owners'
+  | 'pr-template'
+
+export type PolicyAction = 'notify' | 'block' | 'auto-fix' | 'warn'
+
+export interface PolicyRule {
+  id: string
+  name: string
+  description: string
+  type: PolicyRuleType
+  severity: SeverityLevel
+  enabled: boolean
+  action: PolicyAction
+  conditions: Record<string, any>
+  repositories: string[]
+  exemptions: string[]
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface WebhookEvent {
+  id: string
+  eventType: string
+  repository: string
+  sender: string
+  payload: any
+  receivedAt: Date
+  processed: boolean
+  violations: PolicyViolationEvent[]
+}
+
+export interface PolicyViolationEvent {
+  id: string
+  webhookEventId: string
+  ruleId: string
+  ruleName: string
+  repository: string
+  branch?: string
+  pullRequest?: number
+  commit?: string
+  severity: SeverityLevel
+  description: string
+  remediation: string
+  autoFixAvailable: boolean
+  notificationSent: boolean
+  resolved: boolean
+  detectedAt: Date
+  resolvedAt?: Date
+}
+
+export interface NotificationChannel {
+  id: string
+  type: 'email' | 'slack' | 'webhook' | 'github-issue'
+  name: string
+  enabled: boolean
+  config: Record<string, any>
+  severityFilter: SeverityLevel[]
+}
+
+export interface PolicyEnforcementStats {
+  totalEvents: number
+  violationsDetected: number
+  violationsResolved: number
+  autoFixesApplied: number
+  notificationsSent: number
+  averageResolutionTime: number
+  complianceRate: number
+  topViolatedRules: Array<{
+    ruleId: string
+    ruleName: string
+    count: number
+  }>
+  violationsByRepository: Array<{
+    repository: string
+    count: number
+  }>
+  violationTrend: Array<{
+    date: Date
+    count: number
+  }>
+}
+
+export interface WebhookConfig {
+  id: string
+  url: string
+  secret: string
+  events: string[]
+  active: boolean
+  repositories: string[]
+  lastDeliveryStatus?: 'success' | 'failed'
+  lastDeliveryAt?: Date
+  createdAt: Date
+}

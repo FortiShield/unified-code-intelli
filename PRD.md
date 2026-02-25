@@ -75,6 +75,13 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Progression**: Authenticate with GitHub → Select organization → Fetch all repositories and org settings → Analyze branch protection policies → Check security settings (2FA enforcement, SSO, dependency scanning) → Assess resource limits (Actions minutes, package storage, cache usage) → Evaluate DevSecOps maturity (CI/CD coverage, automated testing, security scanning) → Score each repository → Identify high-potential repos based on activity, stars, contributors → Calculate weighted org health percentage → Display comprehensive dashboard with drill-down capabilities
 - **Success criteria**: Successfully fetches org-wide data, accurately calculates health metrics, identifies policy violations, highlights high-potential repositories, provides actionable remediation steps with DevSecOps best practice recommendations
 
+### GitHub Policy Enforcement with Webhook Notifications
+- **Functionality**: Automated real-time monitoring and enforcement of GitHub policies across repositories, with webhook-based notifications for policy violations, automated remediation suggestions, and configurable enforcement rules that can automatically block non-compliant actions
+- **Purpose**: Ensures consistent adherence to organizational security and quality standards, prevents policy drift, and provides immediate feedback when policies are violated
+- **Trigger**: User configures policy rules → enables webhook monitoring → GitHub events trigger policy checks in real-time
+- **Progression**: Define policy rules (branch protection, required reviewers, CI checks, security scanning, etc.) → Configure webhook endpoints → GitHub sends events (PR opened, push, branch created) → System validates against policy rules → Detect violations → Generate notifications → Display violations dashboard → Provide one-click remediation → Optionally auto-enforce policies
+- **Success criteria**: Successfully receives webhook events, accurately detects policy violations in real-time, sends timely notifications, provides clear remediation guidance, tracks policy compliance trends over time
+
 ## Edge Case Handling
 
 - **Empty Repository**: Display onboarding flow explaining how to connect repository and upload initial coverage reports
@@ -85,6 +92,10 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Extremely Large Diffs**: Automatically chunk large PRs into reviewable segments, analyze incrementally
 - **Security Scan False Positives**: Allow users to mark false positives, system learns from feedback
 - **Network Disconnection**: Queue analysis requests, process when reconnected, show offline indicator
+- **Webhook Delivery Failures**: Retry with exponential backoff, store failed events for manual review, display webhook health status
+- **Policy Conflicts**: Detect conflicting policies and show warnings, allow priority-based resolution
+- **Rate Limit Exceeded**: Queue policy checks, show rate limit status, suggest GitHub App installation for higher limits
+- **Invalid Webhook Signatures**: Reject unsigned webhooks, log security events, provide webhook configuration guidance
 
 ## Design Direction
 
