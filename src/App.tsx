@@ -11,6 +11,8 @@ import { OrganizationHealthDashboard } from '@/components/OrganizationHealthDash
 import { PolicyEnforcementDashboard } from '@/components/PolicyEnforcementDashboard'
 import { GitHubAppBuilder } from '@/components/GitHubAppBuilder'
 import { SandboxManager } from '@/components/SandboxManager'
+import { MarketplaceListing } from '@/components/MarketplaceListing'
+import { AIModelIntegration } from '@/components/AIModelIntegration'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
 import { Toaster } from '@/components/ui/sonner'
@@ -111,7 +113,7 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-10 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-12 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
                 </TabsTrigger>
@@ -138,6 +140,12 @@ function App() {
                 </TabsTrigger>
                 <TabsTrigger value="github-app" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   GitHub App
+                </TabsTrigger>
+                <TabsTrigger value="marketplace" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Marketplace
+                </TabsTrigger>
+                <TabsTrigger value="ai-models" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  AI Models
                 </TabsTrigger>
                 <TabsTrigger value="sandbox" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Sandbox
@@ -244,6 +252,14 @@ function App() {
 
               <TabsContent value="github-app">
                 <GitHubAppBuilder />
+              </TabsContent>
+
+              <TabsContent value="marketplace">
+                <MarketplaceListing />
+              </TabsContent>
+
+              <TabsContent value="ai-models">
+                <AIModelIntegration />
               </TabsContent>
 
               <TabsContent value="sandbox">
