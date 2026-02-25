@@ -4,10 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useState } from 'react'
-import { GitPullRequest, Sparkle } from '@phosphor-icons/react'
+import { GitPullRequest, Sparkle, GithubLogo } from '@phosphor-icons/react'
 import type { PRReview, SeverityLevel } from '@/lib/types'
 import { generatePRReview } from '@/lib/agents'
+import { githubClient, type PullRequest } from '@/lib/github'
+import { GitHubAuth } from './GitHubAuth'
+import { GitHubPRSelector } from './GitHubPRSelector'
 import { toast } from 'sonner'
 
 const sampleDiff = `diff --git a/src/auth.ts b/src/auth.ts
@@ -28,6 +32,8 @@ export function PRReviewAgent() {
   const [diffText, setDiffText] = useState(sampleDiff)
   const [review, setReview] = useState<PRReview | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const [selectedPR, setSelectedPR] = useState<PullRequest | null>(null)
+  const [inputMode, setInputMode] = useState<'manual' | 'github'>('manual')
 
   const handleAnalyze = async () => {
     if (!diffText.trim()) {
@@ -42,6 +48,25 @@ export function PRReviewAgent() {
       toast.success('PR analysis complete!')
     } catch (error) {
       toast.error('Failed to analyze PR')
+      console.error(error)
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  const handleSelectPR = async (owner: string, repo: string, prNumber: number, pr: PullRequest) => {
+    setSelectedPR(pr)
+    setAnalyzing(true)
+    try {
+      const diff = await githubClient.getPullRequestDiff(owner, repo, prNumber)
+      setDiffText(diff)
+      toast.success(`Loaded PR #${prNumber}`)
+      
+      const result = await generatePRReview(diff)
+      setReview(result)
+      toast.success('PR analysis complete!')
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to fetch PR diff')
       console.error(error)
     } finally {
       setAnalyzing(false)
@@ -71,32 +96,67 @@ export function PRReviewAgent() {
         </div>
       </div>
 
-      <Card className="p-6 glow-border">
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground uppercase tracking-wide mb-2 block">
-              Paste PR Diff
-            </label>
-            <Textarea
-              id="pr-diff"
-              value={diffText}
-              onChange={(e) => setDiffText(e.target.value)}
-              placeholder="Paste your git diff here..."
-              className="font-mono text-xs min-h-[200px] focus:glow-border-accent"
-              rows={10}
-            />
-          </div>
+      <GitHubAuth />
 
-          <Button
-            onClick={handleAnalyze}
-            disabled={analyzing}
-            className="w-full glow-border-accent hover:bg-accent hover:text-accent-foreground transition-all"
-          >
-            <Sparkle size={18} weight="duotone" className="mr-2" />
-            {analyzing ? 'Analyzing PR...' : 'Analyze PR'}
-          </Button>
-        </div>
-      </Card>
+      <Tabs value={inputMode} onValueChange={(v) => setInputMode(v as 'manual' | 'github')} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 bg-card/50">
+          <TabsTrigger value="github" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <GithubLogo size={16} weight="fill" className="mr-2" />
+            From GitHub
+          </TabsTrigger>
+          <TabsTrigger value="manual" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            Manual Input
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="github" className="space-y-4">
+          <GitHubPRSelector onSelectPR={handleSelectPR} />
+          {selectedPR && (
+            <Card className="p-4 bg-accent/10 border-accent/30">
+              <div className="flex items-center gap-3">
+                <GithubLogo size={20} weight="fill" className="text-accent" />
+                <div>
+                  <p className="text-sm font-medium">
+                    PR #{selectedPR.number}: {selectedPR.title}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {selectedPR.head.ref} → {selectedPR.base.ref}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="manual" className="space-y-4">
+          <Card className="p-6 glow-border">
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-foreground uppercase tracking-wide mb-2 block">
+                  Paste PR Diff
+                </label>
+                <Textarea
+                  id="pr-diff"
+                  value={diffText}
+                  onChange={(e) => setDiffText(e.target.value)}
+                  placeholder="Paste your git diff here..."
+                  className="font-mono text-xs min-h-[200px] focus:glow-border-accent"
+                  rows={10}
+                />
+              </div>
+
+              <Button
+                onClick={handleAnalyze}
+                disabled={analyzing}
+                className="w-full glow-border-accent hover:bg-accent hover:text-accent-foreground transition-all"
+              >
+                <Sparkle size={18} weight="duotone" className="mr-2" />
+                {analyzing ? 'Analyzing PR...' : 'Analyze PR'}
+              </Button>
+            </div>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {review && (
         <Card className="p-6 glow-border">

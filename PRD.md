@@ -20,11 +20,11 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Success criteria**: All agent statuses visible, metrics update in real-time, user can navigate to any specialized view
 
 ### PR Review & Auto-Fix Agent
-- **Functionality**: Analyzes code diffs, retrieves semantic context from knowledge graph, generates inline comments with explanations, and provides one-click fix patches
+- **Functionality**: Analyzes code diffs from GitHub PRs or manual input, retrieves semantic context from knowledge graph, generates inline comments with explanations, and provides one-click fix patches
 - **Purpose**: Accelerates code review process while maintaining quality standards, reduces reviewer burden
-- **Trigger**: User pastes PR diff or selects "Analyze PR" from dashboard
-- **Progression**: Input PR diff → Parse AST using tree-sitter → Query vector DB for related context → LLM analyzes with retrieved context → Generate comments with severity ratings → Suggest patches with explanations → User can apply fixes with one click
-- **Success criteria**: Identifies logic flaws, suggests improvements, generates working patches, explains reasoning clearly
+- **Trigger**: User connects GitHub account → selects repository and PR number OR pastes PR diff manually
+- **Progression**: Connect GitHub (optional) → Select repository → Choose PR from list → Auto-fetch diff → LLM analyzes with context → Generate comments with severity ratings → Suggest patches with explanations → User can apply fixes with one click
+- **Success criteria**: Successfully fetches PRs from GitHub API, identifies logic flaws, suggests improvements, generates working patches, explains reasoning clearly
 
 ### Security Analysis Agent
 - **Functionality**: Runs static analysis (Semgrep-style rules), identifies vulnerabilities, filters false positives using LLM reasoning, explains security implications in plain language
@@ -55,11 +55,11 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Success criteria**: Shows accurate metrics, identifies problem areas, trends are visible over time
 
 ### Commit Message Generator
-- **Functionality**: Analyzes staged changes and generates conventional commit messages following best practices
+- **Functionality**: Analyzes staged changes from GitHub commits or manual diff input and generates conventional commit messages following best practices
 - **Purpose**: Maintains consistent commit history, saves developer time, improves project maintainability
-- **Trigger**: User clicks "Generate Commit Message" after staging changes
-- **Progression**: Analyze git diff → Identify changed functions/modules → Classify change type (feat/fix/refactor/docs) → Generate conventional commit message → User can edit before committing
-- **Success criteria**: Generates accurate, descriptive commit messages following conventional commit format
+- **Trigger**: User connects GitHub account → selects repository and commit OR pastes git diff manually
+- **Progression**: Connect GitHub (optional) → Select repository → Choose commit from list → Auto-fetch diff → Identify changed functions/modules → Classify change type (feat/fix/refactor/docs) → Generate conventional commit message → User can copy to clipboard
+- **Success criteria**: Successfully fetches commits from GitHub API, generates accurate and descriptive commit messages following conventional commit format
 
 ### Features Advisor (Executive Intelligence)
 - **Functionality**: Analyzes codebase structure, team velocity, quality metrics, and pending features to provide strategic recommendations on what to build next or what to refactor first

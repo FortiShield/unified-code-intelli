@@ -2,9 +2,13 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useState } from 'react'
-import { GitCommit, Sparkle, Copy, Check } from '@phosphor-icons/react'
+import { GitCommit, Sparkle, Copy, Check, GithubLogo } from '@phosphor-icons/react'
 import { generateCommitMessage } from '@/lib/agents'
+import { githubClient, type Commit } from '@/lib/github'
+import { GitHubAuth } from './GitHubAuth'
+import { GitHubCommitSelector } from './GitHubCommitSelector'
 import { toast } from 'sonner'
 import type { CommitMessage } from '@/lib/types'
 
@@ -50,6 +54,8 @@ export function CommitMessageGenerator() {
   const [rawMessage, setRawMessage] = useState('')
   const [generating, setGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [selectedCommit, setSelectedCommit] = useState<Commit | null>(null)
+  const [inputMode, setInputMode] = useState<'manual' | 'github'>('manual')
 
   const handleGenerate = async () => {
     if (!diffText.trim()) {
@@ -97,6 +103,28 @@ export function CommitMessageGenerator() {
     }
   }
 
+  const handleSelectCommit = async (owner: string, repo: string, sha: string, commit: Commit) => {
+    setSelectedCommit(commit)
+    setGenerating(true)
+    try {
+      const diff = await githubClient.getCommitDiff(owner, repo, sha)
+      setDiffText(diff)
+      toast.success(`Loaded commit ${sha.slice(0, 7)}`)
+      
+      const result = await generateCommitMessage(diff)
+      setRawMessage(result)
+      
+      const parsed = parseCommitMessage(result)
+      setCommitMessage(parsed)
+      toast.success('Commit message generated!')
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to fetch commit diff')
+      console.error(error)
+    } finally {
+      setGenerating(false)
+    }
+  }
+
   const handleCopy = async () => {
     if (rawMessage) {
       await navigator.clipboard.writeText(rawMessage)
@@ -122,32 +150,67 @@ export function CommitMessageGenerator() {
         </div>
       </div>
 
-      <Card className="p-6 glow-border">
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-foreground uppercase tracking-wide mb-2 block">
-              Paste Git Diff
-            </label>
-            <Textarea
-              id="git-diff"
-              value={diffText}
-              onChange={(e) => setDiffText(e.target.value)}
-              placeholder="Paste your git diff here..."
-              className="font-mono text-xs min-h-[200px] focus:glow-border-accent"
-              rows={10}
-            />
-          </div>
+      <GitHubAuth />
 
-          <Button
-            onClick={handleGenerate}
-            disabled={generating}
-            className="w-full glow-border-accent hover:bg-accent hover:text-accent-foreground transition-all"
-          >
-            <Sparkle size={18} weight="duotone" className="mr-2" />
-            {generating ? 'Generating Message...' : 'Generate Commit Message'}
-          </Button>
-        </div>
-      </Card>
+      <Tabs value={inputMode} onValueChange={(v) => setInputMode(v as 'manual' | 'github')} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 bg-card/50">
+          <TabsTrigger value="github" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <GithubLogo size={16} weight="fill" className="mr-2" />
+            From GitHub
+          </TabsTrigger>
+          <TabsTrigger value="manual" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            Manual Input
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="github" className="space-y-4">
+          <GitHubCommitSelector onSelectCommit={handleSelectCommit} />
+          {selectedCommit && (
+            <Card className="p-4 bg-accent/10 border-accent/30">
+              <div className="flex items-center gap-3">
+                <GithubLogo size={20} weight="fill" className="text-accent" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium font-mono">
+                    {selectedCommit.sha.slice(0, 7)} - {selectedCommit.commit.author.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {selectedCommit.commit.message.split('\n')[0]}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="manual" className="space-y-4">
+          <Card className="p-6 glow-border">
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-foreground uppercase tracking-wide mb-2 block">
+                  Paste Git Diff
+                </label>
+                <Textarea
+                  id="git-diff"
+                  value={diffText}
+                  onChange={(e) => setDiffText(e.target.value)}
+                  placeholder="Paste your git diff here..."
+                  className="font-mono text-xs min-h-[200px] focus:glow-border-accent"
+                  rows={10}
+                />
+              </div>
+
+              <Button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="w-full glow-border-accent hover:bg-accent hover:text-accent-foreground transition-all"
+              >
+                <Sparkle size={18} weight="duotone" className="mr-2" />
+                {generating ? 'Generating Message...' : 'Generate Commit Message'}
+              </Button>
+            </div>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {commitMessage && (
         <Card className="p-6 glow-border">
