@@ -365,6 +365,37 @@ export function WorkflowAutomation() {
   }
 
   const handleRunWorkflow = (id: string) => {
+    const workflow = (workflows || []).find(w => w.id === id)
+    if (!workflow) return
+
+    const executionId = `exec_${Date.now()}`
+    
+    const execution = {
+      id: executionId,
+      workflowId: workflow.id,
+      workflowName: workflow.name,
+      triggerSource: 'manual',
+      status: 'running' as const,
+      startedAt: new Date(),
+      nodeExecutions: workflow.actions.map((action, idx) => ({
+        nodeId: action.id,
+        status: idx === 0 ? ('running' as const) : ('pending' as const),
+        startedAt: idx === 0 ? new Date() : undefined
+      })),
+      logs: [
+        {
+          timestamp: new Date(),
+          nodeId: 'system',
+          level: 'info' as const,
+          message: `Workflow "${workflow.name}" started`
+        }
+      ]
+    }
+
+    spark.kv.get<any[]>('workflow-executions').then(executions => {
+      spark.kv.set('workflow-executions', [execution, ...(executions || [])])
+    })
+
     setWorkflows(current =>
       (current || []).map(w =>
         w.id === id
@@ -380,8 +411,8 @@ export function WorkflowAutomation() {
           : w
       )
     )
-    const workflow = (workflows || []).find(w => w.id === id)
-    toast.success(`Running workflow "${workflow?.name}"...`)
+    
+    toast.success(`Running workflow "${workflow.name}"...`)
   }
 
   const handleDuplicateWorkflow = (id: string) => {
