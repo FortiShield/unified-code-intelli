@@ -13,6 +13,7 @@ import { GitHubAppBuilder } from '@/components/GitHubAppBuilder'
 import { SandboxManager } from '@/components/SandboxManager'
 import { MarketplaceListing } from '@/components/MarketplaceListing'
 import { AIModelIntegration } from '@/components/AIModelIntegration'
+import { VisualWorkflowBuilder } from '@/components/VisualWorkflowBuilder'
 import { WorkflowAutomation } from '@/components/WorkflowAutomation'
 import { Sparkle, Brain } from '@phosphor-icons/react'
 import type { Agent } from '@/lib/types'
@@ -114,9 +115,12 @@ function App() {
 
           <main className="container mx-auto px-8 py-8">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-              <TabsList className="grid w-full grid-cols-13 bg-card/50 p-1 h-auto">
+              <TabsList className="grid w-full grid-cols-14 bg-card/50 p-1 h-auto">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Overview
+                </TabsTrigger>
+                <TabsTrigger value="workflow-builder" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Builder
                 </TabsTrigger>
                 <TabsTrigger value="workflows" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Workflows
@@ -228,6 +232,10 @@ function App() {
 
               <TabsContent value="workflows">
                 <WorkflowAutomation />
+              </TabsContent>
+
+              <TabsContent value="workflow-builder">
+                <VisualWorkflowBuilder />
               </TabsContent>
 
               <TabsContent value="pr-review">

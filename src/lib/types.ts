@@ -322,3 +322,90 @@ export interface WebhookConfig {
   lastDeliveryAt?: Date
   createdAt: Date
 }
+
+export type WorkflowNodeType = 
+  | 'trigger-github-event'
+  | 'trigger-schedule'
+  | 'trigger-webhook'
+  | 'agent-pr-review'
+  | 'agent-security'
+  | 'agent-coverage'
+  | 'agent-commit-message'
+  | 'action-create-issue'
+  | 'action-notify'
+  | 'action-deploy'
+  | 'action-merge-pr'
+  | 'action-comment'
+  | 'condition-if'
+  | 'condition-filter'
+  | 'data-transform'
+  | 'data-store'
+
+export interface WorkflowNodePosition {
+  x: number
+  y: number
+}
+
+export interface WorkflowNodePort {
+  id: string
+  type: 'input' | 'output'
+  label: string
+  dataType: string
+}
+
+export interface WorkflowNode {
+  id: string
+  type: WorkflowNodeType
+  label: string
+  position: WorkflowNodePosition
+  config: Record<string, any>
+  inputs: WorkflowNodePort[]
+  outputs: WorkflowNodePort[]
+  category: 'trigger' | 'agent' | 'action' | 'condition' | 'data'
+}
+
+export interface WorkflowConnection {
+  id: string
+  sourceNodeId: string
+  sourcePortId: string
+  targetNodeId: string
+  targetPortId: string
+}
+
+export interface WorkflowExecution {
+  id: string
+  workflowId: string
+  status: 'running' | 'completed' | 'failed' | 'paused'
+  startedAt: Date
+  completedAt?: Date
+  currentNodeId?: string
+  nodeExecutions: Array<{
+    nodeId: string
+    status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped'
+    startedAt?: Date
+    completedAt?: Date
+    input?: any
+    output?: any
+    error?: string
+  }>
+  logs: Array<{
+    timestamp: Date
+    nodeId: string
+    level: 'info' | 'warn' | 'error'
+    message: string
+  }>
+}
+
+export interface Workflow {
+  id: string
+  name: string
+  description: string
+  nodes: WorkflowNode[]
+  connections: WorkflowConnection[]
+  enabled: boolean
+  createdAt: Date
+  updatedAt: Date
+  lastExecutedAt?: Date
+  executionCount: number
+  successRate: number
+}

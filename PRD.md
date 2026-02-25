@@ -82,6 +82,13 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Progression**: Define policy rules (branch protection, required reviewers, CI checks, security scanning, etc.) → Configure webhook endpoints → GitHub sends events (PR opened, push, branch created) → System validates against policy rules → Detect violations → Generate notifications → Display violations dashboard → Provide one-click remediation → Optionally auto-enforce policies
 - **Success criteria**: Successfully receives webhook events, accurately detects policy violations in real-time, sends timely notifications, provides clear remediation guidance, tracks policy compliance trends over time
 
+### Visual Workflow Builder with Drag-and-Drop
+- **Functionality**: Interactive canvas for designing multi-agent workflows by connecting AI agents, GitHub events, marketplace apps, and actions through a visual node-based interface with drag-and-drop functionality, allowing users to orchestrate complex automation pipelines without writing code
+- **Purpose**: Democratizes automation by enabling non-technical users to create sophisticated workflows, connects disparate tools and agents into cohesive pipelines, and provides visual debugging of automation flows
+- **Trigger**: User selects "Workflow Builder" → clicks "Create New Workflow" or edits existing workflow
+- **Progression**: Open canvas → Drag nodes from palette (Triggers: GitHub events, Schedule; Agents: PR Review, Security, Coverage; Actions: Notify, Deploy, Create Issue; Conditions: If/Else, Filter) → Drop on canvas → Connect nodes by dragging from output ports to input ports → Configure each node (select repo, set parameters, map data) → Validate connections → Test workflow with sample data → Save and activate workflow → Monitor execution in real-time
+- **Success criteria**: Intuitive drag-and-drop with snap-to-grid, clear visual connection paths, real-time validation of node compatibility, ability to save/load workflows, execution visualization showing data flow, error handling with clear feedback
+
 ## Edge Case Handling
 
 - **Empty Repository**: Display onboarding flow explaining how to connect repository and upload initial coverage reports
