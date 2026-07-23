@@ -1,114 +1,41 @@
-import { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card } from '@/components/ui/card'
-import { AgentStatusIndicator } from '@/components/AgentStatusIndicator'
-import { PRReviewAgent } from '@/components/PRReviewAgent'
-import { SecurityAnalysisAgent } from '@/components/SecurityAnalysisAgent'
-import { CoverageOptimizerAgent } from '@/components/CoverageOptimizerAgent'
-import { RepositoryHealthMonitor } from '@/components/RepositoryHealthMonitor'
-import { CommitMessageGenerator } from '@/components/CommitMessageGenerator'
-import { OrganizationHealthDashboard } from '@/components/OrganizationHealthDashboard'
-import { PolicyEnforcementDashboard } from '@/components/PolicyEnforcementDashboard'
-import { GitHubAppBuilder } from '@/components/GitHubAppBuilder'
-import { SandboxManager } from '@/components/SandboxManager'
-import { MarketplaceListing } from '@/components/MarketplaceListing'
-import { AIModelIntegration } from '@/components/AIModelIntegration'
-import { VisualWorkflowBuilder } from '@/components/VisualWorkflowBuilder'
-import { WorkflowAutomation } from '@/components/WorkflowAutomation'
-import { WorkflowExecutionHistory } from '@/components/WorkflowExecutionHistory'
-import { Sparkle, Brain } from '@phosphor-icons/react'
-import type { Agent } from '@/lib/types'
+import { GitHubOrganizationPortal } from '@/components/GitHubOrganizationPortal'
+import { Brain, Building2, CircleDashed, GithubLogo, Rocket } from '@phosphor-icons/react'
 import { Toaster } from '@/components/ui/sonner'
 
-const agents: Agent[] = [
-  {
-    id: 'pr-review',
-    name: 'PR Review',
-    description: 'AI-powered code review',
-    status: 'active',
-    icon: 'GitPullRequest'
-  },
-  {
-    id: 'security',
-    name: 'Security',
-    description: 'Vulnerability detection',
-    status: 'active',
-    icon: 'ShieldCheck'
-  },
-  {
-    id: 'coverage',
-    name: 'Coverage',
-    description: 'Test generation',
-    status: 'active',
-    icon: 'TestTube'
-  },
-  {
-    id: 'commit',
-    name: 'Commits',
-    description: 'Message generation',
-    status: 'active',
-    icon: 'GitCommit'
-  },
-  {
-    id: 'health',
-    name: 'Health',
-    description: 'Repository metrics',
-    status: 'active',
-    icon: 'Pulse'
-  },
-  {
-    id: 'org-health',
-    name: 'Org Health',
-    description: 'Organization analysis',
-    status: 'active',
-    icon: 'Building'
-  },
-  {
-    id: 'policy-enforcement',
-    name: 'Policy',
-    description: 'Automated enforcement',
-    status: 'active',
-    icon: 'ShieldCheck'
-  },
-  {
-    id: 'github-app',
-    name: 'GitHub App',
-    description: 'App builder & marketplace',
-    status: 'active',
-    icon: 'Package'
-  },
-  {
-    id: 'sandbox',
-    name: 'Sandbox',
-    description: 'Development environment',
-    status: 'active',
-    icon: 'Terminal'
-  }
-]
-
 function App() {
-  const [activeTab, setActiveTab] = useState('overview')
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,_transparent_0px,_transparent_50px,_oklch(0.25_0.05_265)_50px,_oklch(0.25_0.05_265)_51px)]" />
-        
+
         <div className="relative">
           <header className="border-b border-border bg-card/50 backdrop-blur-sm">
             <div className="container mx-auto px-8 py-6">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-primary/20 glow-border">
-                  <Brain size={32} weight="duotone" className="text-primary" />
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary/20 glow-border">
+                    <Brain size={32} weight="duotone" className="text-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-shadow-glow">CodeOracle AI</h1>
+                    <p className="text-sm text-muted-foreground">Centralized GitHub Organization Platform</p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold tracking-tight text-shadow-glow">
-                    CodeOracle AI
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Multi-Agent Software Engineering Platform
-                  </p>
+
+                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2">
+                    <GithubLogo size={14} />
+                    GitHub GraphQL + REST sync
+                  </div>
+                  <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2">
+                    <Building2 size={14} />
+                    Organization-wide portal
+                  </div>
+                  <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2">
+                    <Rocket size={14} />
+                    AI-generated docs
+                  </div>
                 </div>
               </div>
             </div>
