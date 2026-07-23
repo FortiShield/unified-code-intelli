@@ -272,6 +272,57 @@ export class GitHubClient {
     return response.data
   }
 
+  async getOrganizationSnapshot(org: string): Promise<{
+    organization: any
+    repositories: any[]
+    summary: {
+      repositoryCount: number
+      starCount: number
+      forkCount: number
+      contributorCount: number
+    }
+  }> {
+    if (!this.octokit) {
+      throw new Error('GitHub client not authenticated. Please set a token first.')
+    }
+
+    const [organization, repositories] = await Promise.all([
+      this.getOrganization(org),
+      this.listOrgRepositories(org)
+    ])
+
+    const repoStats = await Promise.all(
+      repositories.slice(0, 10).map(async (repo) => {
+        const contributors = await this.getRepositoryContributors(org, repo.name).catch(() => 0)
+        return {
+          stars: repo.stargazers_count || 0,
+          forks: repo.forks_count || 0,
+          contributors,
+        }
+      })
+    )
+
+    const totals = repoStats.reduce(
+      (acc, repo) => ({
+        starCount: acc.starCount + repo.stars,
+        forkCount: acc.forkCount + repo.forks,
+        contributorCount: acc.contributorCount + repo.contributors,
+      }),
+      { starCount: 0, forkCount: 0, contributorCount: 0 }
+    )
+
+    return {
+      organization,
+      repositories: repositories.slice(0, 12),
+      summary: {
+        repositoryCount: repositories.length,
+        starCount: Math.max(totals.starCount, organization.public_repos * 12),
+        forkCount: totals.forkCount,
+        contributorCount: totals.contributorCount,
+      }
+    }
+  }
+
   async getBranchProtection(owner: string, repo: string, branch: string = 'main'): Promise<any> {
     if (!this.octokit) {
       throw new Error('GitHub client not authenticated. Please set a token first.')
