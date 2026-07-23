@@ -20,11 +20,11 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Success criteria**: All agent statuses visible, metrics update in real-time, user can navigate to any specialized view
 
 ### PR Review & Auto-Fix Agent
-- **Functionality**: Analyzes code diffs, retrieves semantic context from knowledge graph, generates inline comments with explanations, and provides one-click fix patches
+- **Functionality**: Analyzes code diffs from GitHub PRs or manual input, retrieves semantic context from knowledge graph, generates inline comments with explanations, and provides one-click fix patches
 - **Purpose**: Accelerates code review process while maintaining quality standards, reduces reviewer burden
-- **Trigger**: User pastes PR diff or selects "Analyze PR" from dashboard
-- **Progression**: Input PR diff → Parse AST using tree-sitter → Query vector DB for related context → LLM analyzes with retrieved context → Generate comments with severity ratings → Suggest patches with explanations → User can apply fixes with one click
-- **Success criteria**: Identifies logic flaws, suggests improvements, generates working patches, explains reasoning clearly
+- **Trigger**: User connects GitHub account → selects repository and PR number OR pastes PR diff manually
+- **Progression**: Connect GitHub (optional) → Select repository → Choose PR from list → Auto-fetch diff → LLM analyzes with context → Generate comments with severity ratings → Suggest patches with explanations → User can apply fixes with one click
+- **Success criteria**: Successfully fetches PRs from GitHub API, identifies logic flaws, suggests improvements, generates working patches, explains reasoning clearly
 
 ### Security Analysis Agent
 - **Functionality**: Runs static analysis (Semgrep-style rules), identifies vulnerabilities, filters false positives using LLM reasoning, explains security implications in plain language
@@ -55,11 +55,11 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Success criteria**: Shows accurate metrics, identifies problem areas, trends are visible over time
 
 ### Commit Message Generator
-- **Functionality**: Analyzes staged changes and generates conventional commit messages following best practices
+- **Functionality**: Analyzes staged changes from GitHub commits or manual diff input and generates conventional commit messages following best practices
 - **Purpose**: Maintains consistent commit history, saves developer time, improves project maintainability
-- **Trigger**: User clicks "Generate Commit Message" after staging changes
-- **Progression**: Analyze git diff → Identify changed functions/modules → Classify change type (feat/fix/refactor/docs) → Generate conventional commit message → User can edit before committing
-- **Success criteria**: Generates accurate, descriptive commit messages following conventional commit format
+- **Trigger**: User connects GitHub account → selects repository and commit OR pastes git diff manually
+- **Progression**: Connect GitHub (optional) → Select repository → Choose commit from list → Auto-fetch diff → Identify changed functions/modules → Classify change type (feat/fix/refactor/docs) → Generate conventional commit message → User can copy to clipboard
+- **Success criteria**: Successfully fetches commits from GitHub API, generates accurate and descriptive commit messages following conventional commit format
 
 ### Features Advisor (Executive Intelligence)
 - **Functionality**: Analyzes codebase structure, team velocity, quality metrics, and pending features to provide strategic recommendations on what to build next or what to refactor first
@@ -67,6 +67,27 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Trigger**: User selects "Features Advisor" from dashboard
 - **Progression**: Aggregate all metrics → Analyze module stability and churn → Review feature request backlog → LLM synthesizes insights → Generate prioritized recommendations with rationale → Display risk assessment for each recommendation
 - **Success criteria**: Provides actionable strategic insights, explains reasoning, prioritizes recommendations by impact
+
+### GitHub Organization Health Dashboard
+- **Functionality**: Comprehensive organization-level analysis including GitHub policy compliance, branch protection rules, resource limits (memory, cache, actions), repository security posture, DevSecOps maturity assessment, and high-potential repository identification with an overall org health percentage score
+- **Purpose**: Provides C-level and engineering leadership with enterprise-wide visibility into security posture, policy compliance, resource utilization, and identifies repositories requiring attention or having high growth potential
+- **Trigger**: User connects GitHub organization → selects "Org Health" view
+- **Progression**: Authenticate with GitHub → Select organization → Fetch all repositories and org settings → Analyze branch protection policies → Check security settings (2FA enforcement, SSO, dependency scanning) → Assess resource limits (Actions minutes, package storage, cache usage) → Evaluate DevSecOps maturity (CI/CD coverage, automated testing, security scanning) → Score each repository → Identify high-potential repos based on activity, stars, contributors → Calculate weighted org health percentage → Display comprehensive dashboard with drill-down capabilities
+- **Success criteria**: Successfully fetches org-wide data, accurately calculates health metrics, identifies policy violations, highlights high-potential repositories, provides actionable remediation steps with DevSecOps best practice recommendations
+
+### GitHub Policy Enforcement with Webhook Notifications
+- **Functionality**: Automated real-time monitoring and enforcement of GitHub policies across repositories, with webhook-based notifications for policy violations, automated remediation suggestions, and configurable enforcement rules that can automatically block non-compliant actions
+- **Purpose**: Ensures consistent adherence to organizational security and quality standards, prevents policy drift, and provides immediate feedback when policies are violated
+- **Trigger**: User configures policy rules → enables webhook monitoring → GitHub events trigger policy checks in real-time
+- **Progression**: Define policy rules (branch protection, required reviewers, CI checks, security scanning, etc.) → Configure webhook endpoints → GitHub sends events (PR opened, push, branch created) → System validates against policy rules → Detect violations → Generate notifications → Display violations dashboard → Provide one-click remediation → Optionally auto-enforce policies
+- **Success criteria**: Successfully receives webhook events, accurately detects policy violations in real-time, sends timely notifications, provides clear remediation guidance, tracks policy compliance trends over time
+
+### Visual Workflow Builder with Drag-and-Drop
+- **Functionality**: Interactive canvas for designing multi-agent workflows by connecting AI agents, GitHub events, marketplace apps, and actions through a visual node-based interface with drag-and-drop functionality, allowing users to orchestrate complex automation pipelines without writing code
+- **Purpose**: Democratizes automation by enabling non-technical users to create sophisticated workflows, connects disparate tools and agents into cohesive pipelines, and provides visual debugging of automation flows
+- **Trigger**: User selects "Workflow Builder" → clicks "Create New Workflow" or edits existing workflow
+- **Progression**: Open canvas → Drag nodes from palette (Triggers: GitHub events, Schedule; Agents: PR Review, Security, Coverage; Actions: Notify, Deploy, Create Issue; Conditions: If/Else, Filter) → Drop on canvas → Connect nodes by dragging from output ports to input ports → Configure each node (select repo, set parameters, map data) → Validate connections → Test workflow with sample data → Save and activate workflow → Monitor execution in real-time
+- **Success criteria**: Intuitive drag-and-drop with snap-to-grid, clear visual connection paths, real-time validation of node compatibility, ability to save/load workflows, execution visualization showing data flow, error handling with clear feedback
 
 ## Edge Case Handling
 
@@ -78,6 +99,10 @@ This is a sophisticated multi-agent system that requires multiple specialized vi
 - **Extremely Large Diffs**: Automatically chunk large PRs into reviewable segments, analyze incrementally
 - **Security Scan False Positives**: Allow users to mark false positives, system learns from feedback
 - **Network Disconnection**: Queue analysis requests, process when reconnected, show offline indicator
+- **Webhook Delivery Failures**: Retry with exponential backoff, store failed events for manual review, display webhook health status
+- **Policy Conflicts**: Detect conflicting policies and show warnings, allow priority-based resolution
+- **Rate Limit Exceeded**: Queue policy checks, show rate limit status, suggest GitHub App installation for higher limits
+- **Invalid Webhook Signatures**: Reject unsigned webhooks, log security events, provide webhook configuration guidance
 
 ## Design Direction
 
