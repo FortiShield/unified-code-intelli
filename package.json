@@ -51,7 +51,7 @@
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
         "d3": "^7.9.0",
-        "date-fns": "^3.6.0",
+        "date-fns": "^4.4.0",
         "embla-carousel-react": "^8.5.2",
         "framer-motion": "^12.6.2",
         "input-otp": "^1.4.2",
@@ -76,7 +76,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.21.0",
-        "@tailwindcss/postcss": "^4.1.8",
+        "@tailwindcss/postcss": "^4.3.3",
         "@types/react": "^19.0.10",
         "@types/react-dom": "^19.0.4",
         "@vitejs/plugin-react-swc": "^4.2.2",
